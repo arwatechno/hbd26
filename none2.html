@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Birthday Wish - Refined Style</title>
+    <style>
+        /* Define the clean, flat-design palette from image_0.png */
+        :root {
+            --bg-color: #fce4ec; /* Background light pink */
+            --tier-1-color: #fff3e0; /* Pale yellow/cream */
+            --tier-2-color: #a1887f; /* Brown/Taupe */
+            --tier-3-color: #fad0c4; /* Light pink */
+            --topping-color: #ffffff; /* Solid white central topping */
+            --text-color: #d63384; /* Deep pink text */
+            --candle-color: #b2dfdb; /* Light teal candle base */
+            --scallop-top: polygon(0% 10%, 10% 20%, 20% 10%, 30% 20%, 40% 10%, 50% 20%, 60% 10%, 70% 20%, 80% 10%, 90% 20%, 100% 10%, 100% 100%, 0% 100%);
+        }
+
+        /* Standard CSS Reset */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            flex-direction: column;
+            color: var(--text-color);
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            text-align: center;
+            text-shadow: 1px 1px white;
+            transition: opacity 0.5s;
+        }
+
+        /* Stage for absolute positioning */
+        .stage {
+            position: relative;
+            width: 300px;
+            height: 400px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transform-origin: center;
+        }
+
+        /* Build the exact static icon from image_0.png as the end state */
+        .cake-icon {
+            position: absolute;
+            bottom: 50px;
+            display: flex;
+            flex-direction: column-reverse;
+            align-items: center;
+            width: 100%;
+            z-index: 1; /* Keep icon below other interactive layers during build */
+        }
+
+        /* Style each tier layer with the specific color, shape, and shadow */
+        .tier {
+            width: 100%;
+            background-size: cover;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: -10px; /* Specific overlap from image */
+            transition: transform 0.5s ease-out, opacity 0.5s ease-out;
+            opacity: 0;
+            transform: translateY(100px) scale(0.8);
+            position: relative;
+        }
+
+        /* Scalloped top edge for all tiers */
+        .tier-top {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: transparent;
+            clip-path: var(--scallop-top);
+        }
+
+        /* Tier specifics: size and color */
+        .tier-1 {
+            height: 100px;
+            width: 280px;
+            background-color: var(--tier-1-color);
+            z-index: 1;
+        }
+        .tier-2 {
+            height: 80px;
+            width: 220px;
+            background-color: var(--tier-2-color);
+            z-index: 2;
+        }
+        .tier-3 {
+            height: 60px;
+            width: 160px;
+            background-color: var(--tier-3-color);
+            z-index: 3;
+        }
+
+        /* Trigger build animations for tiers */
+        .cake-icon.active .tier {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+        .tier-1 { transition-delay: 0.1s; }
+        .tier-2 { transition-delay: 0.6s; }
+        .tier-3 { transition-delay: 1.1s; }
+
+        /* The central white decoration element from image_0.png */
+        .central-decoration {
+            position: absolute;
+            top: 60px; /* Positioned relative to stage */
+            left: calc(50% - 60px);
+            width: 120px;
+            height: 120px;
+            z-index: 4; /* Higher than tiers, but below final candle assembly during interactions */
+            opacity: 0;
+            transform: scale(0);
+            transition: opacity 0.5s, transform 0.5s;
+        }
+
+        /* Solid white circle with shadow from image */
+        .central-circle {
+            width: 100%;
+            height: 100%;
+            background-color: var(--topping-color);
+            border-radius: 50%;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        /* Interactive layers on top: The countdown candle and blowout effects */
+        .interact-stage {
+            position: absolute;
+            top: -200px; /* Initially off-screen above */
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: top 0.6s ease-out;
+            z-index: 10; /* Highest layer for interactions */
+        }
+
+        .candle-assembly {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 140px; /* Total height of simplified candle + flame */
+        }
+
+        /* A simplified, clean, vector-style candle */
+        .candle {
+            width: 16px;
+            height: 90px;
+            background-color: var(--candle-color);
+            border-radius: 10px 10px 0 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: relative;
+            z-index: 2;
+        }
+
+        /* A simplified flame shape */
+        .flame {
+            position: absolute;
+            top: -25px;
+            width: 12px;
+            height: 35px;
+            background: radial-gradient(circle, #f9d71c 0%, #ff9800 60%, rgba(255,152,0,0) 80%);
+            border-radius: 50% 50% 15% 15%;
+            box-shadow: 0 0 8px #f9d71c, 0 0 15px #ff9800;
+            opacity: 0;
+            transform: scale(1);
+            transition: opacity 0.3s ease-in, transform 0.3s ease-out;
+            animation: flicker 1s infinite alternate;
+        }
+
+        /* Countdown display */
+        .countdown-timer {
+            position: absolute;
+            left: 25px;
+            top: 20px;
+            font-size: 28px;
+            font-weight: bold;
+            color: white;
+            background-color: rgba(0, 0, 0, 0.4);
+            padding: 5px 10px;
+            border-radius: 10px;
+            display: none;
+            z-index: 3;
+        }
+
+        /* Active states for interactions */
+        .interact-stage.descended {
+            top: 40px; /* Lands centrally above tiers */
+        }
+        .flame.lit {
+            opacity: 1;
+        }
+        @keyframes flicker {
+            0% { transform: scale(1.0); }
+            25% { transform: scale(1.05); }
+            50% { transform: scale(0.95); }
+            75% { transform: scale(1.1); }
+            100% { transform: scale(1.0); }
+        }
+
+        /* Extinguish and blowout animations on the simplified candle */
+        @keyframes extinguish {
+            0% { transform: scale(1.0) translateY(0); opacity: 1; }
+            100% { transform: scale(0) translateY(15px); opacity: 0; }
+        }
+        .flame.blown-out {
+            animation: extinguish 0.5s ease-out forwards;
+        }
+
+        .smoke-puff {
+            position: absolute;
+            top: 25px;
+            width: 25px;
+            height: 25px;
+            background-color: rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            transform: scale(0);
+            opacity: 0;
+            z-index: 1;
+        }
+        .smoke-puff.show {
+            animation: puff 0.6s ease-out;
+        }
+        @keyframes puff {
+            0% { transform: scale(0.2); opacity: 1; }
+            100% { transform: scale(1.8); opacity: 0; }
+        }
+
+        /* End-state trigger: once blowout is complete, reveal the full icon from image_0.png */
+        .stage.reveal-icon .interact-stage {
+            display: none; /* Make interaction layer disappear completely */
+        }
+        .stage.reveal-icon .central-decoration {
+            opacity: 1; /* Fully reveal the central white topping */
+            transform: scale(1);
+        }
+
+    </style>
+</head>
+<body>
+
+    <h1 id="statusHeadline">Your special birthday cake is almost ready...</h1>
+
+    <div class="stage" id="mainStage">
+        <div class="cake-icon" id="cakeIcon">
+            <div class="tier tier-1"><div class="tier-top"></div></div>
+            <div class="tier tier-2"><div class="tier-top"></div></div>
+            <div class="tier tier-3"><div class="tier-top"></div></div>
+            
+            <div class="central-decoration" id="centralDecoration">
+                <div class="central-circle"></div>
+            </div>
+        </div>
+
+        <div class="interact-stage" id="interactStage">
+            <div class="candle-assembly">
+                <div class="flame" id="flameElement"></div>
+                <div class="candle"></div>
+                <div class="countdown-timer" id="timerDisplay"></div>
+                <div class="smoke-puff" id="smokePuff"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const cakeIcon = document.getElementById('cakeIcon');
+            const interactStage = document.getElementById('interactStage');
+            const flameElement = document.getElementById('flameElement');
+            const timerDisplay = document.getElementById('timerDisplay');
+            const smokePuff = document.getElementById('smokePuff');
+            const centralDecoration = document.getElementById('centralDecoration');
+            const mainStage = document.getElementById('mainStage');
+            const headline = document.getElementById('statusHeadline');
+
+            // 1. Build the tiers of the static icon in sequence
+            setTimeout(() => {
+                cakeIcon.classList.add('active');
+            }, 100);
+
+            // 2. Once built, introduce the countdown interaction (simplified candle)
+            setTimeout(() => {
+                headline.textContent = "Hooray! The perfect cake is here!";
+            }, 2000); // Wait for build to complete
+
+            setTimeout(() => {
+                interactStage.classList.add('descended');
+                headline.textContent = "Ready to make a wish?";
+            }, 3000); // Bring down simplified candle assembly
+
+            // 3. Flame is lit, countdown starts
+            setTimeout(() => {
+                flameElement.classList.add('lit');
+                startCountdown();
+                headline.textContent = "Quick, make a wish before the flame is gone!";
+            }, 4000); // Give interaction time to land and settle
+
+            function startCountdown() {
+                let count = 5;
+                timerDisplay.style.display = 'block';
+                timerDisplay.textContent = count;
+
+                const intervalId = setInterval(() => {
+                    count--;
+                    timerDisplay.textContent = count;
+
+                    if (count === 0) {
+                        clearInterval(intervalId);
+                        blowOut();
+                    }
+                }, 1000);
+            }
+
+            // 4. Blow out simplified candle, then transition into final clean icon state
+            function blowOut() {
+                flameElement.classList.remove('lit');
+                flameElement.classList.add('blown-out');
+                timerDisplay.style.display = 'none';
+                smokePuff.classList.add('show');
+                
+                headline.textContent = "Hooray! May all your wishes come true! 🎂";
+
+                // Final step: After blowout effects complete, reveal the exact static icon from image_0.png
+                setTimeout(() => {
+                    mainStage.classList.add('reveal-icon'); // Make interaction disappear, reveal static topping
+                    headline.textContent = "Hooray! Let's party! 🎉";
+                }, 1000); // Let the smoke puff clear
+            }
+        });
+    </script>
+</body>
+</html>

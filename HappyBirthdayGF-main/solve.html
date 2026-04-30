@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Birthday Vault</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&family=Pacifico&display=swap" rel="stylesheet">
+</head>
+<style>* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+      background-image: url('download.png');
+  background-repeat: no-repeat;  
+  background-size:cover;      
+  background-attachment: fixed; 
+  background-position: center;  
+
+}
+
+/* Glassmorphism Card */
+.card {
+    background: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 3rem;
+    border-radius: 24px;
+    text-align: center;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+    max-width: 400px;
+    width: 90%;
+    animation: float 4s ease-in-out infinite;
+}
+
+.icon {
+    font-size: 3.5rem;
+}
+
+h1 {
+    font-family: 'Pacifico', cursive;
+    color: #fffbc1;
+    font-size: 2.2rem;
+    margin-bottom: 2rem;
+    text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.5);
+}
+
+.input-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+input {
+    padding: 15px;
+    border-radius: 12px;
+    border: none;
+    font-size: 1.5rem;
+    text-align: center;
+    outline: none;
+    color: #ff4e50;
+    font-weight: bold;
+    box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.button-85 {
+  padding: 0.6em 2em;
+  border: none;
+  outline: none;
+  color: rgb(255, 255, 255);
+  background: #111;
+  cursor: pointer;
+  position: relative;
+  z-index: 0;
+  border-radius: 10px;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  width: 50%;
+  margin-left: 20%;
+}
+
+.button-85:before {
+  content: "";
+  background: linear-gradient(
+    45deg,
+    #ff7300,
+    #fffb00,
+    #7a00ff,
+    #ff00c8,
+    #ff0000
+  );
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  background-size: 400%;
+  z-index: -1;
+  filter: blur(5px);
+  -webkit-filter: blur(5px);
+  width: calc(100% + 4px);
+  height: calc(100% + 4px);
+  animation: glowing-button-85 20s linear infinite;
+  transition: opacity 0.3s ease-in-out;
+  border-radius: 10px;
+}
+
+@keyframes glowing-button-85 {
+  0% {
+    background-position: 0 0;
+  }
+  50% {
+    background-position: 400% 0;
+  }
+  100% {
+    background-position: 0 0;
+  }
+}
+
+.button-85:after {
+  z-index: -1;
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: #222;
+  left: 0;
+  top: 0;
+  border-radius: 10px;
+}
+
+#errorMsg {
+    margin-top: 1.5rem;
+    font-weight: 600;
+    color: #d63031;
+    min-height: 24px;
+}
+
+/* Animations */
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-15px); }
+}
+
+.shake {
+    animation: shakeAnim 0.4s;
+}
+
+@keyframes shakeAnim {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-8px); }
+    75% { transform: translateX(8px); }
+}</style>
+<body>
+
+    <div class="confetti-bg"></div>
+
+    <div class="card" id="mainCard">
+        <div class="icon">🎁</div>
+        <h1>simple question? &radic;1600 -2 =?</h1>
+        
+        <div class="input-container">
+            <input type="number" id="ageInput" placeholder="??" autocomplete="off">
+            <button class="button-85"  onclick="checkBirthday()">Unlock the Party</button>
+        </div>
+
+        
+        <p id="errorMsg"></p>
+    </div>
+
+    <script>
+        function checkBirthday() {
+            const val = document.getElementById('ageInput').value;
+            const card = document.getElementById('mainCard');
+            const error = document.getElementById('errorMsg');
+
+            if (val === "38") {
+                // Flash white before redirecting
+                document.body.style.backgroundColor = "white";
+                window.location.href = "https://www.birthday-cake.online/?config=N4IgNghgdg5iBcICmUQBoQGcliQYwBckATAYQgGskBJYhZXGaAgWkwICcIB3AIyQ4cAnuhB4A9lABmASxilxAWwAOuInXicArkgx5oxXABUhypPTyRMmGXlH6ohpAq1QCCAMwBODMTkyCTHpvURlMAFEADwIZWC0wgAsSBCkIMGwMMIAhMHFuWLh4VPTdEF5c-NgABQ5xGA4kawQABj0tdiVyKiD4YABfDHaBADkIRXNEe3aCJQBZRswIGAmQKXEOAAICJI3%2Bdg3ZjgA6AEEE8eINhJlFbDApDdEYGQA3EbGViA5uCBA%2BoA";
+            } else {
+                // Shake the card if wrong
+                card.classList.add('shake');
+                error.textContent = "Close! But not quite right... 🎂";
+                
+                setTimeout(() => {
+                    card.classList.remove('shake');
+                }, 500);
+            }
+        }
+    </script>
+</body>
+</html>
